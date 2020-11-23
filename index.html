@@ -9,6 +9,19 @@
     box-sizing: border-box;
   }
 
+  .round {
+
+    background-image: : url('');
+
+   }
+   input[type="button"] {
+         background: url('https://sun9-73.userapi.com/c849324/v849324780/aa9a5/Mf_AKquigJM.jpg') no-repeat center;
+         background-size: cover;
+         border-radius: 100px;
+         height: 200px;
+         width: 200px;
+        box-shadow: 0 0 7px #666;
+   }
   .strips {
     min-height: 100vh;
     text-align: center;
@@ -195,8 +208,6 @@
     top: 3vw;
     opacity: 0;
     z-index: 10;
-    -webkit-transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     cursor: pointer;
     -webkit-transition-delay: 0.5s;
             transition-delay: 0.5s;
@@ -321,6 +332,7 @@
   .fa {
     font-size: 30px;
     color: white;
+
   }
 
   h2 {
@@ -333,18 +345,34 @@
   }
 </style>
 
-<body translate="no">
+<body >
   <section class="strips">
     <article class="strips__strip">
       <div class="strip__content">
         <h1 class="strip__title" data-name="Lorem">О себе</h1>
         <div class="strip__inner-text">
-      </div>
+          <input  type="button"  onclick="msg()" alt="">
+          <script>
+            function msg(){
+              location.replace("https://vk.com/wg_mb");
+            }
+          </script>
+          <h1 class="text_1">Тут немного информации обо мне</h1>
+          <h3 class="text_2">Тут тоже информация обо мне, ее чуть больше, но я не знаю что о себе написать</h2>
+        </div>
     </article>
     <article class="strips__strip">
       <div class="strip__content">
         <h1 class="strip__title" data-name="Dolor">Предметы</h1>
         <div class="strip__inner-text">
+          <ol>Тут предмет
+            <li>Тут преподаватель</li>
+            <li>И тут</li>
+          </ol>
+          <p>______________________________________________________________</p>
+          <ol>И тут предмет
+          <li>А тут еще преподавать</li>
+        </ol>
         </div>
       </div>
     </article>
@@ -354,284 +382,286 @@
         <div class="strip__inner-text">
           <canvas style = "border: 1px solid white" width="320" height="640" id="game"></canvas>
             <script>
-    function getRandomInt(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
+              function getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
 
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+              }
 
-    function generateSequence() {
-      const sequence = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
+              function generateSequence() {
+                const sequence = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
 
-      while (sequence.length) {
-        const rand = getRandomInt(0, sequence.length - 1);
-        const name = sequence.splice(rand, 1)[0];
-        tetrominoSequence.push(name);
-      }
-    }
-
-
-    function getNextTetromino() {
-      if (tetrominoSequence.length === 0) {
-        generateSequence();
-      }
-
-      const name = tetrominoSequence.pop();
-      const matrix = tetrominos[name];
-
-      // I and O start centered, all others start in left-middle
-      const col = playfield[0].length / 2 - Math.ceil(matrix[0].length / 2);
-
-      // I starts on row 21 (-1), all others start on row 22 (-2)
-      const row = name === 'I' ? -1 : -2;
-
-      return {
-        name: name,
-        matrix: matrix,
-        row: row,
-        col: col
-      };
-    }
-
-    function rotate(matrix) {
-      const N = matrix.length - 1;
-      const result = matrix.map((row, i) =>
-        row.map((val, j) => matrix[N - j][i])
-      );
-
-      return result;
-    }
+                while (sequence.length) {
+                  const rand = getRandomInt(0, sequence.length - 1);
+                  const name = sequence.splice(rand, 1)[0];
+                  tetrominoSequence.push(name);
+                }
+              }
 
 
-    function isValidMove(matrix, cellRow, cellCol) {
-      for (let row = 0; row < matrix.length; row++) {
-        for (let col = 0; col < matrix[row].length; col++) {
-          if (matrix[row][col] && (
-              // outside the game bounds
-              cellCol + col < 0 ||
-              cellCol + col >= playfield[0].length ||
-              cellRow + row >= playfield.length ||
-              // collides with another piece
-              playfield[cellRow + row][cellCol + col])
-            ) {
-            return false;
-          }
-        }
-      }
+              function getNextTetromino() {
+                if (tetrominoSequence.length === 0) {
+                  generateSequence();
+                }
 
-      return true;
-    }
+                const name = tetrominoSequence.pop();
+                const matrix = tetrominos[name];
 
+                // I and O start centered, all others start in left-middle
+                const col = playfield[0].length / 2 - Math.ceil(matrix[0].length / 2);
 
-    function placeTetromino() {
-      for (let row = 0; row < tetromino.matrix.length; row++) {
-        for (let col = 0; col < tetromino.matrix[row].length; col++) {
-          if (tetromino.matrix[row][col]) {
+                // I starts on row 21 (-1), all others start on row 22 (-2)
+                const row = name === 'I' ? -1 : -2;
 
-            // game over if piece has any part offscreen
-            if (tetromino.row + row < 0) {
-              return showGameOver();
-            }
+                return {
+                  name: name,
+                  matrix: matrix,
+                  row: row,
+                  col: col
+                };
+              }
 
-            playfield[tetromino.row + row][tetromino.col + col] = tetromino.name;
-          }
-        }
-      }
+              function rotate(matrix) {
+                const N = matrix.length - 1;
+                const result = matrix.map((row, i) =>
+                  row.map((val, j) => matrix[N - j][i])
+                );
 
-      // check for line clears starting from the bottom and working our way up
-      for (let row = playfield.length - 1; row >= 0; ) {
-        if (playfield[row].every(cell => !!cell)) {
-
-          // drop every row above this one
-          for (let r = row; r >= 0; r--) {
-            for (let c = 0; c < playfield[r].length; c++) {
-              playfield[r][c] = playfield[r-1][c];
-            }
-          }
-        }
-        else {
-          row--;
-        }
-      }
-
-      tetromino = getNextTetromino();
-    }
-
-    function showGameOver() {
-      cancelAnimationFrame(rAF);
-      gameOver = true;
-
-      context.fillStyle = 'black';
-      context.globalAlpha = 0.75;
-      context.fillRect(0, canvas.height / 2 - 30, canvas.width, 60);
-
-      context.globalAlpha = 1;
-      context.fillStyle = 'white';
-      context.font = '36px monospace';
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
-      context.fillText('Ты проиграл!', canvas.width / 2, canvas.height / 2);
-    }
-
-    const canvas = document.getElementById('game');
-    const context = canvas.getContext('2d');
-    const grid = 32;
-    const tetrominoSequence = [];
+                return result;
+              }
 
 
-    const playfield = [];
+              function isValidMove(matrix, cellRow, cellCol) {
+                for (let row = 0; row < matrix.length; row++) {
+                  for (let col = 0; col < matrix[row].length; col++) {
+                    if (matrix[row][col] && (
+                        // outside the game bounds
+                        cellCol + col < 0 ||
+                        cellCol + col >= playfield[0].length ||
+                        cellRow + row >= playfield.length ||
+                        // collides with another piece
+                        playfield[cellRow + row][cellCol + col])
+                      ) {
+                      return false;
+                    }
+                  }
+                }
 
-    for (let row = -2; row < 20; row++) {
-      playfield[row] = [];
-
-      for (let col = 0; col < 10; col++) {
-        playfield[row][col] = 0;
-      }
-    }
-
-
-    const tetrominos = {
-      'I': [
-        [0,0,0,0],
-        [1,1,1,1],
-        [0,0,0,0],
-        [0,0,0,0]
-      ],
-      'J': [
-        [1,0,0],
-        [1,1,1],
-        [0,0,0],
-      ],
-      'L': [
-        [0,0,1],
-        [1,1,1],
-        [0,0,0],
-      ],
-      'O': [
-        [1,1],
-        [1,1],
-      ],
-      'S': [
-        [0,1,1],
-        [1,1,0],
-        [0,0,0],
-      ],
-      'Z': [
-        [1,1,0],
-        [0,1,1],
-        [0,0,0],
-      ],
-      'T': [
-        [0,1,0],
-        [1,1,1],
-        [0,0,0],
-      ]
-    };
+                return true;
+              }
 
 
-    const colors = {
-      'I': 'cyan',
-      'O': 'yellow',
-      'T': 'purple',
-      'S': 'green',
-      'Z': 'red',
-      'J': 'blue',
-      'L': 'orange'
-    };
+              function placeTetromino() {
+                for (let row = 0; row < tetromino.matrix.length; row++) {
+                  for (let col = 0; col < tetromino.matrix[row].length; col++) {
+                    if (tetromino.matrix[row][col]) {
 
-    let count = 0;
-    let tetromino = getNextTetromino();
-    let rAF = null;
-    let gameOver = false;
+                      // game over if piece has any part offscreen
+                      if (tetromino.row + row < 0) {
+                        return showGameOver();
+                      }
+
+                      playfield[tetromino.row + row][tetromino.col + col] = tetromino.name;
+                    }
+                  }
+                }
+
+                // check for line clears starting from the bottom and working our way up
+                for (let row = playfield.length - 1; row >= 0; ) {
+                  if (playfield[row].every(cell => !!cell)) {
+
+                    // drop every row above this one
+                    for (let r = row; r >= 0; r--) {
+                      for (let c = 0; c < playfield[r].length; c++) {
+                        playfield[r][c] = playfield[r-1][c];
+                      }
+                    }
+                  }
+                  else {
+                    row--;
+                  }
+                }
+
+                tetromino = getNextTetromino();
+              }
+
+              function showGameOver() {
+                cancelAnimationFrame(rAF);
+                gameOver = true;
+
+                context.fillStyle = 'black';
+                context.globalAlpha = 0.75;
+                context.fillRect(0, canvas.height / 2 - 30, canvas.width, 60);
+
+                context.globalAlpha = 1;
+                context.fillStyle = 'white';
+                context.font = '36px monospace';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText('Ты проиграл!', canvas.width / 2, canvas.height / 2);
+              }
+
+              const canvas = document.getElementById('game');
+              const context = canvas.getContext('2d');
+              const grid = 32;
+              const tetrominoSequence = [];
 
 
-    function loop() {
-      rAF = requestAnimationFrame(loop);
-      context.clearRect(0,0,canvas.width,canvas.height);
+              const playfield = [];
 
-      for (let row = 0; row < 20; row++) {
-        for (let col = 0; col < 10; col++) {
-          if (playfield[row][col]) {
-            const name = playfield[row][col];
-            context.fillStyle = colors[name];
+              for (let row = -2; row < 20; row++) {
+                playfield[row] = [];
 
-            context.fillRect(col * grid, row * grid, grid-1, grid-1);
-          }
-        }
-      }
+                for (let col = 0; col < 10; col++) {
+                  playfield[row][col] = 0;
+                }
+              }
 
-      if (tetromino) {
 
-        if (++count > 35) {
-          tetromino.row++;
-          count = 0;
+              const tetrominos = {
+                'I': [
+                  [0,0,0,0],
+                  [1,1,1,1],
+                  [0,0,0,0],
+                  [0,0,0,0]
+                ],
+                'J': [
+                  [1,0,0],
+                  [1,1,1],
+                  [0,0,0],
+                ],
+                'L': [
+                  [0,0,1],
+                  [1,1,1],
+                  [0,0,0],
+                ],
+                'O': [
+                  [1,1],
+                  [1,1],
+                ],
+                'S': [
+                  [0,1,1],
+                  [1,1,0],
+                  [0,0,0],
+                ],
+                'Z': [
+                  [1,1,0],
+                  [0,1,1],
+                  [0,0,0],
+                ],
+                'T': [
+                  [0,1,0],
+                  [1,1,1],
+                  [0,0,0],
+                ]
+              };
 
-          if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
-            tetromino.row--;
-            placeTetromino();
-          }
-        }
 
-        context.fillStyle = colors[tetromino.name];
+              const colors = {
+                'I': 'cyan',
+                'O': 'yellow',
+                'T': 'purple',
+                'S': 'green',
+                'Z': 'red',
+                'J': 'blue',
+                'L': 'orange'
+              };
 
-        for (let row = 0; row < tetromino.matrix.length; row++) {
-          for (let col = 0; col < tetromino.matrix[row].length; col++) {
-            if (tetromino.matrix[row][col]) {
+              let count = 0;
+              let tetromino = getNextTetromino();
+              let rAF = null;
+              let gameOver = false;
 
-              context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid-1, grid-1);
-            }
-          }
-        }
-      }
-    }
 
-    document.addEventListener('keydown', function(e) {
-      if (gameOver) return;
+              function loop() {
+                rAF = requestAnimationFrame(loop);
+                context.clearRect(0,0,canvas.width,canvas.height);
 
-      // left and right arrow keys (move)
-      if (e.which === 37 || e.which === 39) {
-        const col = e.which === 37
-          ? tetromino.col - 1
-          : tetromino.col + 1;
+                for (let row = 0; row < 20; row++) {
+                  for (let col = 0; col < 10; col++) {
+                    if (playfield[row][col]) {
+                      const name = playfield[row][col];
+                      context.fillStyle = colors[name];
 
-        if (isValidMove(tetromino.matrix, tetromino.row, col)) {
-          tetromino.col = col;
-        }
-      }
+                      context.fillRect(col * grid, row * grid, grid-1, grid-1);
+                    }
+                  }
+                }
 
-      // up arrow key (rotate)
-      if (e.which === 38) {
-        const matrix = rotate(tetromino.matrix);
-        if (isValidMove(matrix, tetromino.row, tetromino.col)) {
-          tetromino.matrix = matrix;
-        }
-      }
+                if (tetromino) {
 
-      // down arrow key (drop)
-      if(e.which === 40) {
-        const row = tetromino.row + 1;
+                  if (++count > 35) {
+                    tetromino.row++;
+                    count = 0;
 
-        if (!isValidMove(tetromino.matrix, row, tetromino.col)) {
-          tetromino.row = row - 1;
+                    if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
+                      tetromino.row--;
+                      placeTetromino();
+                    }
+                  }
 
-          placeTetromino();
-          return;
-        }
+                  context.fillStyle = colors[tetromino.name];
 
-        tetromino.row = row;
-      }
-    });
+                  for (let row = 0; row < tetromino.matrix.length; row++) {
+                    for (let col = 0; col < tetromino.matrix[row].length; col++) {
+                      if (tetromino.matrix[row][col]) {
 
-    rAF = requestAnimationFrame(loop);
-  </script>
+                        context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid-1, grid-1);
+                      }
+                    }
+                  }
+                }
+              }
+
+              document.addEventListener('keydown', function(e) {
+                if (gameOver) return;
+
+                // left and right arrow keys (move)
+                if (e.which === 37 || e.which === 39) {
+                  const col = e.which === 37
+                    ? tetromino.col - 1
+                    : tetromino.col + 1;
+
+                  if (isValidMove(tetromino.matrix, tetromino.row, col)) {
+                    tetromino.col = col;
+                  }
+                }
+
+                // up arrow key (rotate)
+                if (e.which === 38) {
+                  const matrix = rotate(tetromino.matrix);
+                  if (isValidMove(matrix, tetromino.row, tetromino.col)) {
+                    tetromino.matrix = matrix;
+                  }
+                }
+
+                // down arrow key (drop)
+                if(e.which === 40) {
+                  const row = tetromino.row + 1;
+
+                  if (!isValidMove(tetromino.matrix, row, tetromino.col)) {
+                    tetromino.row = row - 1;
+
+                    placeTetromino();
+                    return;
+                  }
+                if(e.which === 32)
+                {
+                  loop()
+                }
+                  tetromino.row = row;
+                }
+              });
+
+              rAF = requestAnimationFrame(loop);
+            </script>
 
         </div>
       </div>
     </article>
-    <i class="fa fa-close strip__close"></i>
+    <i class="fa fa-close strip__close" >Закрыть</i>
   </section>
-  <script src="https://static.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script id="rendered-js">
